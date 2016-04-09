@@ -56,7 +56,6 @@ public:
     }
 
     int Insert(int  _val){
-        std::cout<<"Insert:"<<_val<<std::endl;
         boost::scoped_array<std::shared_ptr<ListNode>>      updateNodes(new std::shared_ptr<ListNode>[maxLevel]());
         boost::scoped_array<int>            wides(new int[maxLevel]());
         std::shared_ptr<ListNode>   curNode =   head;
@@ -71,13 +70,7 @@ public:
             }
         }while(curLevel>=0);
 
-       // std::cout<<"wides:";
-       // for(int i = 0; i < maxLevel;++i){
-       //     std::cout<<wides[i]<<"  ";
-       // }
-       // std::cout<<std::endl;
         size_t  _NodeLevel  =   CalcNoteLevel();
-       //std::cout<<"NodeLevel:"<<_NodeLevel<<std::endl;
 
         std::shared_ptr<ListNode>   _newNode(new ListNode(_val,_NodeLevel));
 
@@ -99,11 +92,6 @@ public:
             }
             level    =   _NodeLevel;
         }
-       // else{
-       //     for(int i = _NodeLevel; i < level;++i){
-       //         updateNodes[i]->wides[i]+=1;
-       //     }
-       // }
         for(int i = _NodeLevel;i < maxLevel;++i)
             updateNodes[i]->wides[i]  +=  1;
 
@@ -114,7 +102,6 @@ public:
     }
 
     bool    RemoveByValue(int   _val){
-        //std::cout<<"remove value:"<<_val<<std::endl;
         boost::scoped_array<std::shared_ptr<ListNode>>  updateNodes(new std::shared_ptr<ListNode>[maxLevel]());
         std::shared_ptr<ListNode>   curNode =   this->head; int curLevel    =   maxLevel-1;
         do{
@@ -164,7 +151,7 @@ public:
                 }
             }
         }while(curLevel>=0);
-        //when it comes here, the rank is larger that the size of this skip list
+        //when it comes here, the rank is larger than the size of this skip list
         return  curNode->val;
     }
 
@@ -187,22 +174,17 @@ public:
          int    _rank   =   0;
          std::shared_ptr<ListNode>  curNode =   this->head;
          int    curLevel    =   this->level;
-         //std::cout<<"curLevel:"<<curLevel<<"    steps:";
          do{
              if(curNode->forwardNodes[curLevel]&&curNode->forwardNodes[curLevel]->val<=_val){
                  if(curNode->forwardNodes[curLevel]->val==_val){
-                    //std::cout<<curNode->wides[curLevel]<<" ";
-                    //std::cout<<std::endl;
                     return    _rank+curNode->wides[curLevel];
                  }
-                 //std::cout<<curNode->wides[curLevel]<<" ";
                  _rank  +=  curNode->wides[curLevel];
                  curNode    =   curNode->forwardNodes[curLevel];
              }else{
                  --curLevel;
              }
          }while(curLevel>=0);
-         //std::cout<<std::endl;
          if(curNode->forwardNodes[0]&&curNode->forwardNodes[0]->val == _val){
               return    curNode->wides[0]    +   _rank;
          }else{
